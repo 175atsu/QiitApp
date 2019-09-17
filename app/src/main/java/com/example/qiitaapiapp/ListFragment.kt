@@ -48,7 +48,7 @@ class ListFragment: Fragment() {
 
                 //ステータスコードが200：OKなので、ここではちゃんと通信できたよー
                 if (response.isSuccessful) {
-
+                    println("aa")
                     response.body()
                 } else {
 
