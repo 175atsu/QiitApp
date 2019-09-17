@@ -1,7 +1,6 @@
 package com.example.qiitaapiapp.data.network
 
-import com.google.gson.annotations.SerializedName
-
+//後に必要となるqiitaのリンクのurl取得するための箱
 data class QiitResponse(
     //@SerializedName("avatar_url")
     val avatarUrl: String?

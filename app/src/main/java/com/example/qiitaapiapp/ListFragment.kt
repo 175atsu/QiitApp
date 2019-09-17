@@ -2,11 +2,15 @@ package com.example.qiitaapiapp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import java.io.IOException
+import com.example.qiitaapiapp.data.network.QiitResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ListFragment: Fragment() {
 
@@ -31,19 +35,41 @@ class ListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
 
-    fun set() {
-
-        try {
-            val response = Retrofit.API.apiDemo().execute()
-            if (response.isSuccessful()) {
-                return response.body()
-            } else {
-                // failed
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
+        getItemList { QiitRespons ->
+            Log.d("test","$QiitRespons")
         }
     }
+
+    fun getItemList(callback: (List<QiitResponse>) -> Unit) {
+        Retrofit.API.apiDemo().enqueue(object : Callback<List<QiitResponse>> {
+
+            override fun onResponse(call: Call<List<QiitResponse>>, response: Response<List<QiitResponse>>) {
+
+                //ステータスコードが200：OKなので、ここではちゃんと通信できたよー
+                if (response.isSuccessful) {
+
+                    response.body()
+                } else {
+
+                }
+            }
+
+//            override fun onResponse(Call<List<QiitResponse>>, Response<List<QiitResponse>>) {
+//                if (response.isSuccessful()) {
+//                    //通信結果をオブジェクトで受け取る
+//                    QiitResponse demo = response.body();
+//                    Log.d("RETROFIT_TEST", demo.info.seed);
+//                } else {
+//                    //通信が成功したが、エラーcodeが返ってきた場合はこちら
+//                    Log.d("RETROFIT_TEST", "error_code" + response.code());
+//                }
+//            }
+
+            override fun onFailure(call: Call<List<QiitResponse>>, t: Throwable) {
+
+            }
+        })
+    }
+
 }

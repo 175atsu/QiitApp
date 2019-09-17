@@ -14,20 +14,22 @@ import com.example.qiitaapiapp.data.network.ApiService
 
 class RetrofitInstance {
 
-    //okhttpのclient作成
+    //Clientを作成
     val httpClient = OkHttpClient.Builder()
     val httpBuilder: OkHttpClient.Builder get() {
         // create http client
             httpClient.addInterceptor(Interceptor { chain ->
                 val original = chain.request()
 
-                //header
+                //header(付加情報)
                 val request = original.newBuilder()
                     .header("Accept", "application/json")
                     .method(original.method(), original.body())
                     .build()
 
-                return@Interceptor chain.proceed(request)
+                var response = chain.proceed(request)
+
+                return@Interceptor response
             })
             .readTimeout(30, TimeUnit.SECONDS)
 
@@ -39,28 +41,8 @@ class RetrofitInstance {
         return httpClient
     }
 
-
-    // core for controller
-    //val service: ApiService = create(ApiService::class.java)
-
-//    lateinit var retrofit: Retrofit
-//
-//    fun <S> create(serviceClass: Class<S>): S {
-//        val gson = GsonBuilder()
-//            .serializeNulls()
-//            .create()
-//        // create retrofit
-//        retrofit = Retrofit.Builder()
-//            .addConverterFactory(GsonConverterFactory.create(gson))
-//            .baseUrl("https : //qiita.com/") // Put your base URL
-//            .client(httpBuilder.build())
-//            .build()
-//
-//        return retrofit.create(serviceClass)
-//    }
-
     //クライアント生成
-    var client = httpBuilder.build()
+    var client = httpClient.build()
     var retrofit = Retrofit.Builder()
         .baseUrl("https : //qiita.com/")//基本のurl設定
         .addConverterFactory(GsonConverterFactory.create())//Gsonの使用
