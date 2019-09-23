@@ -1,6 +1,5 @@
 package com.example.qiitaapiapp
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,7 @@ class ViewAdapter(private val list: List<Model>, private val listener: ListListe
     //データ
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.titleView.text =  list[position].title
-        holder.userName.text = list[position].name
+        holder.userName.text = list[position].id
         holder.itemView.setOnClickListener {
             listener.onClickRow(it,list[position])
         }
