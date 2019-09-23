@@ -1,7 +1,6 @@
 package com.example.qiitaapiapp
 
-//import com.example.qiitaapiapp.data.network.ApiService
-import com.google.gson.GsonBuilder
+
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,8 +14,9 @@ import com.example.qiitaapiapp.data.network.ApiService
 class RetrofitInstance {
 
     //Clientを作成
-    val httpClient = OkHttpClient.Builder()
     val httpBuilder: OkHttpClient.Builder get() {
+        //httpClinetのBuilderの中に入ってるメソッド使う？
+        val httpClient = OkHttpClient.Builder()
         // create http client
             httpClient.addInterceptor(Interceptor { chain ->
                 val original = chain.request()
@@ -41,14 +41,17 @@ class RetrofitInstance {
         return httpClient
     }
 
-    //クライアント生成
-    var client = httpClient.build()
-    var retrofit = Retrofit.Builder()
-        .baseUrl("https : //qiita.com/")//基本のurl設定
-        .addConverterFactory(GsonConverterFactory.create())//Gsonの使用
-        .client(client)//カスタマイズしたokhttpのクライアントの設定
-        .build()
-    //Interfaceから実装を取得
-    var API = retrofit.create(ApiService::class.java)
+    fun createService(): ApiService {
+        //クライアント生成
+        var client = httpBuilder.build()
+        var retrofit = Retrofit.Builder()
+            .baseUrl("https://qiita.com/")//基本のurl設定
+            .addConverterFactory(GsonConverterFactory.create())//Gsonの使用
+            .client(client)//カスタマイズしたokhttpのクライアントの設定
+            .build()
+        //Interfaceから実装を取得
+        var API = retrofit.create(ApiService::class.java)
 
+        return API
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.qiitaapiapp
 
-data class Model (
-    val title: String,
-    val url: String
-)
+class Model {
+    var title: String? = null
+    var id: String? = null
+    var url: String? = null
+}
