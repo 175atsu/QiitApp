@@ -17,11 +17,9 @@ class RetrofitInstance {
     val httpBuilder: OkHttpClient.Builder get() {
         //httpClinetのBuilderの中に入ってるメソッド使う？
         val httpClient = OkHttpClient.Builder()
-        // create http client
+        //headerの追加
             httpClient.addInterceptor(Interceptor { chain ->
                 val original = chain.request()
-
-                //header(付加情報)
                 val request = original.newBuilder()
                     .header("Accept", "application/json")
                     .method(original.method(), original.body())
@@ -33,7 +31,7 @@ class RetrofitInstance {
             })
             .readTimeout(30, TimeUnit.SECONDS)
 
-        //log interceptor
+        //log
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         httpClient.addInterceptor(loggingInterceptor)

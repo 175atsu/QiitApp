@@ -106,7 +106,7 @@ class ListFragment: Fragment() {
         fragment.setArguments(bundle)
         // FragmentをFragmentManagerにセットする
         getFragmentManager()!!.beginTransaction()
-            .add(R.id.webView, fragment, "sample_fragment")
+            .add(R.id.detailContainer, fragment)
             .commit()
     }
 }
