@@ -10,8 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 
 class ListFragment: Fragment() {
@@ -43,7 +47,7 @@ class ListFragment: Fragment() {
     //アダプターなどなどの設定
     fun recyclerViewInitialSetting() {
         val rv = recyclerView
-        val adapter = ViewAdapter(fetchAllUserData(), object : ViewAdapter.ListListener {
+        val adapter = ViewAdapter(searchGitHubRepositoryByCoroutines(), object : ViewAdapter.ListListener {
             override fun onClickRow(tappedView: View, userListModel: Model) {
                 toDetail(userListModel)
             }
@@ -57,41 +61,79 @@ class ListFragment: Fragment() {
     }
 
     //データリストに保存し、そのデータの取得
-    fun fetchAllUserData(): List<Model> {
+//    fun fetchAllUserData(): List<Model> {
+//
+//        val dataList = mutableListOf<Model>()
+//        //リクエストURl作成してデータとる
+//        Retrofit.createService().apiDemo(page = 1, perPage = 20).enqueue(object : Callback<List<QiitResponse>> {
+//
+//            //非同期処理
+//            override fun onResponse(call: Call<List<QiitResponse>>, response: Response<List<QiitResponse>>) {
+//                Log.d("TAGres","onResponse")
+//
+//                //ステータスコードが200：OKなので、ここではちゃんと通信できたよー
+//                if (response.isSuccessful) {
+//                    response.body()?.let {
+//                        for (item in it) {
+//                            val data: Model = Model().also {
+//                                it.title = item.title
+//                                it.url = item.url
+//                                it.id = item.user!!.id
+//                                Log.d("TAGtitle", it.title)
+//                                Log.d("TAGname",it.id)
+//                            }
+//                            dataList.add(data)
+//                        }
+//                        //更新
+//                        recyclerView.adapter?.notifyDataSetChanged()
+//                    }
+//                } else {
+//                }
+//            }
+//            override fun onFailure(call: Call<List<QiitResponse>>, t: Throwable) {
+//                Log.d("TAGres","onFailure")
+//            }
+//        })
+//        return dataList
+//    }
 
+
+    suspend fun qiitRepositoriesByCoroutines(
+        page: Int,
+        perPage: Int
+    ): List<QiitResponse> {
+        return Retrofit.createService().apiDemo(page = page, perPage = perPage)
+    }
+
+    val coroutineScope = CoroutineScope(context = Dispatchers.Main)
+    fun searchGitHubRepositoryByCoroutines(): List<Model> {
         val dataList = mutableListOf<Model>()
-        //リクエストURl作成してデータとる
-        Retrofit.createService().apiDemo(page = 1, perPage = 20).enqueue(object : Callback<List<QiitResponse>> {
-
-            //非同期処理
-            override fun onResponse(call: Call<List<QiitResponse>>, response: Response<List<QiitResponse>>) {
-                Log.d("TAGres","onResponse")
-
-                //ステータスコードが200：OKなので、ここではちゃんと通信できたよー
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        for (item in it) {
-                            val data: Model = Model().also {
-                                it.title = item.title
-                                it.url = item.url
-                                it.id = item.user!!.id
-                                Log.d("TAGtitle", it.title)
-                                Log.d("TAGname",it.id)
-                            }
-                            dataList.add(data)
+        coroutineScope.launch {
+            try {
+                val qiitaRepositoriesData = qiitRepositoriesByCoroutines(
+                    page = 1,
+                    perPage = 20
+                )
+                qiitaRepositoriesData.let {
+                    for (item in it) {
+                        val data: Model = Model().also {
+                            it.title = item.title
+                            it.url = item.url
+                            it.id = item.user!!.id
                         }
-                        //更新
-                        recyclerView.adapter?.notifyDataSetChanged()
+                        dataList.add(data)
                     }
-                } else {
+                    //更新
+                    recyclerView.adapter?.notifyDataSetChanged()
                 }
-            }
-            override fun onFailure(call: Call<List<QiitResponse>>, t: Throwable) {
+            } catch (e: HttpException) {
                 Log.d("TAGres","onFailure")
+                // リクエスト失敗時の処理を行う
             }
-        })
+        }
         return dataList
     }
+
 
     //詳細ページへの遷移
     fun toDetail(urlData: Model) {

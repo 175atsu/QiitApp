@@ -6,11 +6,20 @@ import retrofit2.http.Query
 
 interface ApiService {
 
+//    //パラメータ指定
+//    @GET("api/v2/items")
+//    //多分モデルを引き出してる
+//    fun apiDemo(
+//        @Query("page") page: Int,
+//        @Query("par_page") perPage: Int
+//    ): Call<List<QiitResponse>>
+
     //パラメータ指定
     @GET("api/v2/items")
     //多分モデルを引き出してる
-    fun apiDemo(
+    suspend fun apiDemo(
         @Query("page") page: Int,
         @Query("par_page") perPage: Int
-    ): Call<List<QiitResponse>>
+    ): List<QiitResponse>
+
 }
