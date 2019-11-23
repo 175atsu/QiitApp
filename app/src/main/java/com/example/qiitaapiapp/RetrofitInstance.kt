@@ -1,27 +1,55 @@
 package com.example.qiitaapiapp
 
 
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
-import com.example.qiitaapiapp.data.network.ApiService
-
 
 
 class RetrofitInstance {
+
+    private var retrofit: Retrofit
+    private val url = "https://qiita.com"
+
+    init {
+        //Moshi
+        val moshi: Moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
+        //クライアント生成
+        //var client = httpBuilder.build()
+        this.retrofit = Retrofit.Builder()
+            .baseUrl(url)//基本のurl設定
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(getClient())//カスタマイズしたokhttpのクライアントの設定
+            .build()
+    }
+
+    private fun getClient(): OkHttpClient {
+        return OkHttpClient
+            .Builder()
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+    }
+
 
     //Clientを作成
     val httpBuilder: OkHttpClient.Builder get() {
         //httpClinetのBuilderの中に入ってるメソッド使う？
         val httpClient = OkHttpClient.Builder()
-        // create http client
+        //headerの追加
             httpClient.addInterceptor(Interceptor { chain ->
                 val original = chain.request()
-
-                //header(付加情報)
                 val request = original.newBuilder()
                     .header("Accept", "application/json")
                     .method(original.method(), original.body())
@@ -33,7 +61,7 @@ class RetrofitInstance {
             })
             .readTimeout(30, TimeUnit.SECONDS)
 
-        //log interceptor
+        //log
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         httpClient.addInterceptor(loggingInterceptor)
@@ -42,16 +70,8 @@ class RetrofitInstance {
     }
 
     fun createService(): ApiService {
-        //クライアント生成
-        var client = httpBuilder.build()
-        var retrofit = Retrofit.Builder()
-            .baseUrl("https://qiita.com/")//基本のurl設定
-            .addConverterFactory(GsonConverterFactory.create())//Gsonの使用
-            .client(client)//カスタマイズしたokhttpのクライアントの設定
-            .build()
         //Interfaceから実装を取得
         var API = retrofit.create(ApiService::class.java)
-
         return API
     }
 }

@@ -1,4 +1,4 @@
-package com.example.qiitaapiapp.data.network
+package com.example.qiitaapiapp
 
 import retrofit2.Call
 import retrofit2.http.GET
@@ -8,7 +8,6 @@ interface ApiService {
 
     //パラメータ指定
     @GET("api/v2/items")
-    //suspend fun fetchGithubUser(@Path("account") account: String?): QiitResponse
     //多分モデルを引き出してる
     fun apiDemo(
         @Query("page") page: Int,
