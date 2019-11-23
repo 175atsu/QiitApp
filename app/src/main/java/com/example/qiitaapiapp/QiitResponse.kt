@@ -1,4 +1,4 @@
-package com.example.qiitaapiapp.data.network
+package com.example.qiitaapiapp
 
 //後に必要となるqiitaのリンクのurl取得するための箱
 data class QiitResponse(

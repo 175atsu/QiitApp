@@ -1,4 +1,4 @@
-package com.example.qiitaapiapp.data.network
+package com.example.qiitaapiapp
 
 import retrofit2.Call
 import retrofit2.http.GET

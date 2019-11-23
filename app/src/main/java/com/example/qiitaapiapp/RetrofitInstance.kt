@@ -1,17 +1,47 @@
 package com.example.qiitaapiapp
 
 
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
-import com.example.qiitaapiapp.data.network.ApiService
-
 
 
 class RetrofitInstance {
+
+    private var retrofit: Retrofit
+    private val url = "https://qiita.com"
+
+    init {
+        //Moshi
+        val moshi: Moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
+        //クライアント生成
+        //var client = httpBuilder.build()
+        this.retrofit = Retrofit.Builder()
+            .baseUrl(url)//基本のurl設定
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(getClient())//カスタマイズしたokhttpのクライアントの設定
+            .build()
+    }
+
+    private fun getClient(): OkHttpClient {
+        return OkHttpClient
+            .Builder()
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+    }
+
 
     //Clientを作成
     val httpBuilder: OkHttpClient.Builder get() {
@@ -40,16 +70,8 @@ class RetrofitInstance {
     }
 
     fun createService(): ApiService {
-        //クライアント生成
-        var client = httpBuilder.build()
-        var retrofit = Retrofit.Builder()
-            .baseUrl("https://qiita.com/")//基本のurl設定
-            .addConverterFactory(GsonConverterFactory.create())//Gsonの使用
-            .client(client)//カスタマイズしたokhttpのクライアントの設定
-            .build()
         //Interfaceから実装を取得
         var API = retrofit.create(ApiService::class.java)
-
         return API
     }
 }

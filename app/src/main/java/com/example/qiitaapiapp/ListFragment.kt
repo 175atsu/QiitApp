@@ -1,19 +1,15 @@
 package com.example.qiitaapiapp
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.qiitaapiapp.data.network.QiitResponse
 import kotlinx.android.synthetic.main.fragment_list.*
-import kotlinx.android.synthetic.main.row.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -106,7 +102,8 @@ class ListFragment: Fragment() {
         fragment.setArguments(bundle)
         // FragmentをFragmentManagerにセットする
         getFragmentManager()!!.beginTransaction()
-            .add(R.id.detailContainer, fragment)
+            .addToBackStack(null)
+            .replace(R.id.detailContainer, fragment)
             .commit()
     }
 }
