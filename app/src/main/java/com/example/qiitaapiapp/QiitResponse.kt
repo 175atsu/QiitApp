@@ -8,5 +8,6 @@ data class QiitResponse(
 )
 
 data class User(
-    val id: String?
+    val id: String?,
+    val profile_image_url: String
 )

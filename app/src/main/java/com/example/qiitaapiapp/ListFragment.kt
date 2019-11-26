@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -119,7 +120,8 @@ class ListFragment: Fragment() {
                         val data: Model = Model().also {
                             it.title = item.title
                             it.url = item.url
-                            it.id = item.user!!.id
+                            it.id = item.user?.id
+                            it.image = item.user?.profile_image_url
                         }
                         dataList.add(data)
                     }
