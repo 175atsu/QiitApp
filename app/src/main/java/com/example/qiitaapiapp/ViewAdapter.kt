@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.util.Util
 
 class ViewAdapter(private val list: List<Model>, private val listener: ListListener): RecyclerView.Adapter<ViewHolder>() {
@@ -24,6 +26,8 @@ class ViewAdapter(private val list: List<Model>, private val listener: ListListe
         Glide.with(holder.itemView)
             .load(list[position].image)
             .error(android.R.drawable.btn_star_big_on)
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(30)))
+            .override(300, 300)
             .into(holder.userImage)
 
         holder.itemView.setOnClickListener {
