@@ -98,7 +98,7 @@ class ListFragment: Fragment() {
 //        return dataList
 //    }
 
-
+    //coroutine利用
     suspend fun qiitRepositoriesByCoroutines(
         page: Int,
         perPage: Int
