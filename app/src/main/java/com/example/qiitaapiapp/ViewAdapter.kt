@@ -3,14 +3,12 @@ package com.example.qiitaapiapp
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.util.Util
 
-class ViewAdapter(private val list: List<Model>, private val listener: ListListener): RecyclerView.Adapter<ViewHolder>() {
+class ViewAdapter(private val list: List<ViewModel>, private val listener: ListListener): RecyclerView.Adapter<ViewHolder>() {
     //レイアウト
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -42,6 +40,6 @@ class ViewAdapter(private val list: List<Model>, private val listener: ListListe
 
     //質問
     interface ListListener {
-        fun onClickRow(tappedView: View, rowModel: Model)
+        fun onClickRow(tappedView: View, rowModel: ViewModel)
     }
 }
