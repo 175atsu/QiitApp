@@ -43,7 +43,7 @@ class RetrofitInstance {
     }
 
 
-    //Clientを作成
+    //Clientを作成、Moshi利用しない場合
     val httpBuilder: OkHttpClient.Builder get() {
         //httpClinetのBuilderの中に入ってるメソッド使う？
         val httpClient = OkHttpClient.Builder()

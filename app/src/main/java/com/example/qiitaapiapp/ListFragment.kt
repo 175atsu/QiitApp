@@ -9,20 +9,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
 
 class ListFragment: Fragment() {
 
     var mContext: Context? = null
     val Retrofit = RetrofitInstance()
+    private val mUser: ViewModel = ViewModel()
 
     //謎
     companion object {
@@ -49,7 +46,7 @@ class ListFragment: Fragment() {
     fun recyclerViewInitialSetting() {
         val rv = recyclerView
         val adapter = ViewAdapter(searchGitHubRepositoryByCoroutines(), object : ViewAdapter.ListListener {
-            override fun onClickRow(tappedView: View, userListModel: Model) {
+            override fun onClickRow(tappedView: View, userListModel: ViewModel) {
                 toDetail(userListModel)
             }
         })
@@ -62,9 +59,9 @@ class ListFragment: Fragment() {
     }
 
     //データリストに保存し、そのデータの取得
-//    fun fetchAllUserData(): List<Model> {
+//    fun fetchAllUserData(): List<ViewModel> {
 //
-//        val dataList = mutableListOf<Model>()
+//        val dataList = mutableListOf<ViewModel>()
 //        //リクエストURl作成してデータとる
 //        Retrofit.createService().apiDemo(page = 1, perPage = 20).enqueue(object : Callback<List<QiitResponse>> {
 //
@@ -76,7 +73,7 @@ class ListFragment: Fragment() {
 //                if (response.isSuccessful) {
 //                    response.body()?.let {
 //                        for (item in it) {
-//                            val data: Model = Model().also {
+//                            val data: ViewModel = ViewModel().also {
 //                                it.title = item.title
 //                                it.url = item.url
 //                                it.id = item.user!!.id
@@ -98,7 +95,7 @@ class ListFragment: Fragment() {
 //        return dataList
 //    }
 
-
+    //coroutine利用
     suspend fun qiitRepositoriesByCoroutines(
         page: Int,
         perPage: Int
@@ -107,8 +104,8 @@ class ListFragment: Fragment() {
     }
 
     val coroutineScope = CoroutineScope(context = Dispatchers.Main)
-    fun searchGitHubRepositoryByCoroutines(): List<Model> {
-        val dataList = mutableListOf<Model>()
+    fun searchGitHubRepositoryByCoroutines(): List<ViewModel> {
+        val dataList = mutableListOf<ViewModel>()
         coroutineScope.launch {
             try {
                 val qiitaRepositoriesData = qiitRepositoriesByCoroutines(
@@ -117,7 +114,7 @@ class ListFragment: Fragment() {
                 )
                 qiitaRepositoriesData.let {
                     for (item in it) {
-                        val data: Model = Model().also {
+                        val data: ViewModel = ViewModel().also {
                             it.title = item.title
                             it.url = item.url
                             it.id = item.user?.id
@@ -138,7 +135,7 @@ class ListFragment: Fragment() {
 
 
     //詳細ページへの遷移
-    fun toDetail(urlData: Model) {
+    fun toDetail(urlData: ViewModel) {
         val fragment = WebViewFragment()
         val bundle = Bundle().apply {
             putString("URL", urlData.url)
