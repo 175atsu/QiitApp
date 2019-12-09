@@ -2,6 +2,7 @@ package com.example.qiitaapiapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.qiitaapiapp.epoxy.EpoxyListFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.add(R.id.detailContainer, ListFragment.createInstance(this))
+            transaction.add(R.id.detailContainer, EpoxyListFragment.createInstance(this))
             transaction.commit()
         }
     }
