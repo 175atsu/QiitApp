@@ -12,7 +12,7 @@ class ViewAdapter(private val list: List<ViewModel>, private val listener: ListL
     //レイアウト
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val rowView = layoutInflater.inflate(R.layout.row, parent, false)
+        val rowView = layoutInflater.inflate(R.layout.view_row, parent, false)
         return ViewHolder(rowView)
     }
 
