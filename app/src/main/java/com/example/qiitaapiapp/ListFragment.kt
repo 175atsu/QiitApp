@@ -100,7 +100,7 @@ class ListFragment: Fragment() {
         page: Int,
         perPage: Int
     ): List<QiitResponse> {
-        return Retrofit.createService().apiDemo(page = page, perPage = perPage)
+        return Retrofit.createService().apiDemo(page, perPage)
     }
 
     val coroutineScope = CoroutineScope(context = Dispatchers.Main)

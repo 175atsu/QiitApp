@@ -15,13 +15,16 @@ import com.example.qiitaapiapp.*
 import kotlinx.android.synthetic.main.fragment_epoxy_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class EpoxyListFragment : Fragment() {
 
     var mContext: Context? = null
-    val Retrofit = RetrofitInstance()
+    val retrofit = RetrofitInstance()
+    val dataList = mutableListOf<EpoxyModel>()
+    val carouselList = mutableListOf<EpoxyCarouselModel>()
 
     //謎
     companion object {
@@ -46,7 +49,6 @@ class EpoxyListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //recyclerViewInitialSetting()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -71,12 +73,11 @@ class EpoxyListFragment : Fragment() {
         page: Int,
         perPage: Int
     ): List<QiitResponse> {
-        return Retrofit.createService().apiDemo(page = page, perPage = perPage)
+        return retrofit.createService().apiDemo(page = page, perPage = perPage)
     }
 
     val coroutineScope = CoroutineScope(context = Dispatchers.Main)
     fun searchGitHubRepositoryByCoroutines() {
-        val dataList = mutableListOf<EpoxyModel>()
         Log.d("テスト1", dataList.toString())
         coroutineScope.launch {
             try {
@@ -93,11 +94,19 @@ class EpoxyListFragment : Fragment() {
                                 it.id = item.user?.id
                                 it.image = item.user?.profile_image_url
                             }
+                        val carouselData: EpoxyCarouselModel = EpoxyCarouselModel()
+                            .also {
+                                it.title = item.title
+                                it.url = item.url
+                                it.id = item.user?.id
+                                it.image = item.user?.profile_image_url
+                            }
                         dataList.add(data)
-                        Log.d("テスト2", dataList.toString())
+                        carouselList.add(carouselData)
                     }
                     //更新
                     controller.list = dataList
+                    controller.carouselList = carouselList
                 }
             } catch (e: HttpException) {
                 Log.d("TAGres", "onFailure")
@@ -106,7 +115,6 @@ class EpoxyListFragment : Fragment() {
         }
         Log.d("テスト3", dataList.toString())
     }
-
 
     //詳細ページへの遷移
     fun toDetail(urlData: ViewModel) {

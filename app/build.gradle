@@ -94,6 +94,9 @@ dependencies {
     implementation "com.airbnb.android:epoxy-paging:$epoxy_version"
     kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
 
+    //CardView
+    implementation 'androidx.cardview:cardview:1.0.0'
+
     // Okhttp
 //    def okhttp_version = '4.0.1'
 //    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"

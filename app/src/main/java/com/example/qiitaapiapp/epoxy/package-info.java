@@ -1,6 +1,6 @@
-//@EpoxyDataBindingPattern(rClass = R.class, layoutPrefix = "view_holder")
 @EpoxyDataBindingLayouts({
-        R.layout.view_epoxy_row
+        R.layout.view_epoxy_row,
+        R.layout.view_epoxy_carousel
 })
 package com.example.qiitaapiapp.epoxy;
 
